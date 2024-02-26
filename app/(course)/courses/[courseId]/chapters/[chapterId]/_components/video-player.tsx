@@ -9,9 +9,16 @@ import { Loader2, Lock } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
+import { db } from "@/lib/db";
 
-interface VideoPlayerProps {
-  playbackId: string;
+interface QuizQuestionProps {
+  existingQuizData: {
+    questions: {
+      question: string;
+      answers: string[];
+      correctAnswerIndex: number;
+    }
+  };
   courseId: string;
   chapterId: string;
   nextChapterId?: string;
@@ -21,17 +28,18 @@ interface VideoPlayerProps {
 };
 
 export const VideoPlayer = ({
-  playbackId,
+  existingQuizData,
   courseId,
   chapterId,
   nextChapterId,
   isLocked,
   completeOnEnd,
   title,
-}: VideoPlayerProps) => {
+}: QuizQuestionProps) => {
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
   const confetti = useConfettiStore();
+  
 
   const onEnd = async () => {
     try {
@@ -55,7 +63,6 @@ export const VideoPlayer = ({
       toast.error("Something went wrong");
     }
   }
-
   return (
     <div className="relative aspect-video">
       {!isReady && !isLocked && (
@@ -72,16 +79,17 @@ export const VideoPlayer = ({
         </div>
       )}
       {!isLocked && (
-        <MuxPlayer
-          title={title}
-          className={cn(
-            !isReady && "hidden"
-          )}
-          onCanPlay={() => setIsReady(true)}
-          onEnded={onEnd}
-          autoPlay
-          playbackId={playbackId}
-        />
+        <p>{existingQuizData?.questions.question}</p>
+        // <MuxPlayer
+        //   title={title}
+        //   className={cn(
+        //     !isReady && "hidden"
+        //   )}
+        //   onCanPlay={() => setIsReady(true)}
+        //   onEnded={onEnd}
+        //   autoPlay
+        //   playbackId={playbackId}
+        // />
       )}
     </div>
   )

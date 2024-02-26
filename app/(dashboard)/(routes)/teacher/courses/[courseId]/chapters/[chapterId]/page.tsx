@@ -29,9 +29,6 @@ const ChapterIdPage = async ({
       id: params.chapterId,
       courseId: params.courseId
     },
-    include: {
-      muxData: true,
-    },
   });
 
   if (!chapter) {
@@ -49,7 +46,8 @@ const ChapterIdPage = async ({
 
   const completionText = `(${completedFields}/${totalFields})`;
 
-  const isComplete = requiredFields.every(Boolean);
+  // const isComplete = requiredFields.every(Boolean);
+  const isComplete = true
 
   return (
     <>
@@ -123,7 +121,7 @@ const ChapterIdPage = async ({
           </div>
           <div>
             <div className="flex items-center gap-x-2">
-              <IconBadge icon={Video} />
+              {/* <IconBadge icon={Video} /> */}
               <h2 className="text-xl">
                 Add a video
               </h2>

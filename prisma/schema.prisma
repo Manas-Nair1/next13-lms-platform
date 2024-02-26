@@ -61,8 +61,8 @@ model Chapter {
   isPublished Boolean @default(false)
   isFree Boolean @default(false)
 
-  muxData MuxData?
-
+  muxData QuizData?
+  quiztopic String
   courseId String
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
@@ -74,11 +74,9 @@ model Chapter {
   @@index([courseId])
 }
 
-model MuxData {
+model QuizData {
   id String @id @default(uuid())
-  assetId String
-  playbackId String?
-
+  questions Json
   chapterId String @unique
   chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 }

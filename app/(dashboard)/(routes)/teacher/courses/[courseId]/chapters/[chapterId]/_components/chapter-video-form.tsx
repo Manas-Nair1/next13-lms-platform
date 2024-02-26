@@ -7,20 +7,20 @@ import { Pencil, PlusCircle, Video } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter, MuxData } from "@prisma/client";
+import { Chapter } from "@prisma/client";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 
 interface ChapterVideoFormProps {
-  initialData: Chapter & { muxData?: MuxData | null };
+  initialData: Chapter;
   courseId: string;
   chapterId: string;
 };
 
 const formSchema = z.object({
-  videoUrl: z.string().min(1),
+  quiztopic: z.string().min(1),
 });
 
 export const ChapterVideoForm = ({
@@ -29,6 +29,7 @@ export const ChapterVideoForm = ({
   chapterId,
 }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [topicInput, setTopicInput] = useState("");
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -74,26 +75,32 @@ export const ChapterVideoForm = ({
           </div>
         ) : (
           <div className="relative aspect-video mt-2">
-            <MuxPlayer
-              playbackId={initialData?.muxData?.playbackId || ""}
-            />
+            Muxplayer would go here
           </div>
         )
       )}
       {isEditing && (
         <div>
-          <FileUpload
-            endpoint="chapterVideo"
-            onChange={(url) => {
-              if (url) {
-                onSubmit({ videoUrl: url });
-              }
-            }}
-          />
-          <div className="text-xs text-muted-foreground mt-4">
-           Upload this chapter&apos;s video
-          </div>
+        {/* Replace FileUpload with a text input */}
+        <input
+          type="text"
+          value={topicInput}
+          onChange={(e) => setTopicInput(e.target.value)}
+          className="border p-2 mt-2"
+          placeholder="Enter quiz topic"
+        />
+        <button
+          onClick={() => {
+            // Use the topicInput value when submitting
+            onSubmit({ quiztopic: topicInput });
+          }}
+        >
+          Submit
+        </button>
+        <div className="text-xs text-muted-foreground mt-4">
+          Provide a topic for this chapter&apos;s quiz
         </div>
+      </div>
       )}
       {initialData.videoUrl && !isEditing && (
         <div className="text-xs text-muted-foreground mt-2">

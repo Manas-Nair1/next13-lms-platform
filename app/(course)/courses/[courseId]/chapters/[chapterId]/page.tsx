@@ -22,24 +22,21 @@ const ChapterIdPage = async ({
   if (!userId) {
     return redirect("/");
   } 
-  interface QuizData {
-    questions: {
-      question: string;
-      answers: string[];
-      correctAnswerIndex: number;
-    }[];
-  }
-  
-  const emptyQuizData: QuizData = {
-    questions: [
-      {
-        question: "",
-        answers: [],
-        correctAnswerIndex: 0,
-      },
-    ],
+  interface QuizQuestionProps {
+    existingQuizData: {
+      questions: {
+        question: string;
+        answers: string[];
+        correctAnswerIndex: number;
+      }
+    };
+    courseId: string;
+    chapterId: string;
+    nextChapterId?: string;
+    isLocked: boolean;
+    completeOnEnd: boolean;
+    title: string;
   };
-
   const {
     chapter,
     course,
@@ -61,6 +58,7 @@ const ChapterIdPage = async ({
       chapterId: params.chapterId
     }
   })
+  console.log(quizData?.questions)
 
   const isLocked = !chapter.isFree && !purchase;
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;
@@ -81,8 +79,9 @@ const ChapterIdPage = async ({
       )}
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4">
+          <p></p>
           <VideoPlayer
-            existingQuizData={quizData}
+            existingQuizData={quizData?.questions}
             chapterId={params.chapterId}
             title={chapter.title}
             courseId={params.courseId}

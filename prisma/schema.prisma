@@ -76,7 +76,7 @@ model Chapter {
 
 model QuizData {
   id String @id @default(uuid())
-  questions Json
+  questions Json 
   chapterId String @unique
   chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 }

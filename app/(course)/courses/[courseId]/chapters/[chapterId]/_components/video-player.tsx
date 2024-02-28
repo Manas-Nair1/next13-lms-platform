@@ -40,7 +40,9 @@ export const VideoPlayer = ({
       if (completeOnEnd) {
         await axios.put(`/api/courses/${courseId}/chapters/${chapterId}/progress`, {
           isCompleted: true,
+          score: calculateFinalScore(),
         });
+
 
         if (!nextChapterId) {
           confetti.onOpen();
@@ -74,7 +76,7 @@ export const VideoPlayer = ({
     const finalScore = (correctAnswers / totalQuestions) * 100;
     return finalScore.toFixed(2); // Round the score to two decimal places
   };
-  
+
   return (
     <div className="relative aspect-video">
       {existingQuizData.questions.map((thisquestion: any, questionIndex: number) => (
@@ -102,9 +104,10 @@ export const VideoPlayer = ({
           ))}
         </div>
       ))}
-      {/* <div>
+      <div>
         <h2>Your Final Score: {calculateFinalScore()}%</h2>
-      </div> */}
+        <button onClick={()=> onEnd()}>Submit</button>
+      </div>
     </div>
   );
   // return (

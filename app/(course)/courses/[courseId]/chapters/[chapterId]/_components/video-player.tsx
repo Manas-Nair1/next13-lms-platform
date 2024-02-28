@@ -9,6 +9,7 @@ import { Loader2, Lock } from "lucide-react";
 
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 import { db } from "@/lib/db";
+import { number } from "zod";
 
 interface QuizQuestionProps {
   existingQuizData: any;
@@ -62,7 +63,7 @@ export const VideoPlayer = ({
     <div className="relative aspect-video">
       <h1>{existingQuizData.questions[0].question}</h1>
       {existingQuizData.questions[0].answers.map((answer: any) => (
-        <p>{answer}</p>
+        <p key={answer}>{answer}</p>
       ))}
       {/* <div>{existingQuizData.questions[0].answers.map((answer: String) => (
         <p>{answer}</p>

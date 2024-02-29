@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
 interface ChartProps {
   data: {
     name: string;
-    total: number;
+    grade: string;
   }[];
 }
 

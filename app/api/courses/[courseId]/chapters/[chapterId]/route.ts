@@ -24,7 +24,7 @@ async function getQuiz(topic:String) {
       },
       {
         role: 'system', content:  `The quiz should have at least 10 questions, and each question should have the question prompt, a list of answer choices, and an index indicating the correct answer. 
-        You can include multiple-choice questions. Please provide a well-structured JSON response. return a json as 
+        You can include multiple-choice questions. Please provide a well-structured JSON response that can be read by JSON.Parse. return a json as 
         type Quiz = {
           questions: Array<{
             question: string;

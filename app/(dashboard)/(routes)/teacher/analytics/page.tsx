@@ -52,40 +52,50 @@ const AnalyticsPage = async () => {
   // console.log(firstName, lastName)
   
   //chatgpt solution to sorting
-  const organizedData = courses.map(async course => {
+  const organizedData = courses.map(async (course) => {
     const chapters = await db.chapter.findMany({
       where: {
         courseId: course.id,
       },
     });
   
-    const chapterInfo = await Promise.all(chapters.map(async chapter => {
-      const chapterGrades = await db.userProgress.findMany({
-        where: {
-          chapterId: chapter.id,
-        },
-      });
+    const chapterInfo = await Promise.all(
+      chapters.map(async (chapter) => {
+        const chapterGrades = await db.userProgress.findMany({
+          where: {
+            chapterId: chapter.id,
+          },
+        });
   
-      const quizResults = chapterGrades.map(grade => ({
-        userId: grade.userId,
-        score: grade.score,
-      }));
+        const quizResults = await Promise.all(
+          chapterGrades.map(async (grade) => {
+            const { firstName, lastName } =
+              (await clerkClient.users.getUser(grade.userId)) || {};
+            // console.log(firstName, lastName)
+            return {
+              userName: `${firstName} ${lastName}`,
+              score: grade.score,
+            };
+          })
+        );
   
-      return {
-        chapterTitle: chapter.title,
-        quizResults,
-      };
-    }));
-  
+        return {
+          chapterTitle: chapter.title,
+          quizResults,
+        };
+      })
+    );
+    
     return {
       coursetitle: course.title,
       chapterInfo,
     };
   });
+  
   let globalVar;
   // Use Promise.all to wait for all async operations to complete
-  await Promise.all(organizedData).then(result => globalVar =  result);
-  console.log(globalVar)
+  await Promise.all(organizedData).then((result) => (globalVar = result));
+  console.log(globalVar);
   if (globalVar == undefined){
     return(
       <div className="p-6">
@@ -96,24 +106,24 @@ const AnalyticsPage = async () => {
 
    return ( 
     <div className="p-6">
-      <Accordion title="Collapsible content" answer="this should be collapsed"></Accordion>
+      {/* <Accordion title="Collapsible content" answer="this should be collapsed"></Accordion> */}
       {/* {globalVar ? <p>{globalVar[1].coursetitle}</p>: <p>else this will be</p>} */}
       
-      <div>
+      <div className="w-full p-5">
         {globalVar.map((course, courseIndex) => (
-          <div key={courseIndex}>
+          <div key={courseIndex} className=" bg-blue-200 m-4 p-4 rounded-full">
             <h2>{course.coursetitle}</h2>
             <ul>
               {course.chapterInfo.map((chapter, chapterIndex) => (
                 <li key={chapterIndex}>
-                  <h3>{chapter.chapterTitle}</h3>
-                  <ul>
+                  <Accordion title={chapter.chapterTitle} answer={chapter.quizResults}></Accordion>
+                  {/* <ul>
                     {chapter.quizResults.map((result, resultIndex) => (
                       <li key={resultIndex}>
                         User: {result.userId}, Score: {result.score}
                       </li>
                     ))}
-                  </ul>
+                  </ul> */}
                 </li>
               ))}
             </ul>

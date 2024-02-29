@@ -30,10 +30,10 @@ import React, { useState } from "react";
 
 interface Grades {
     userId: string
-    
+
 }
 
-const Accordion = ({ title, answer}:{title: string, answer: string}) => {
+const Accordion = ({ title, answer}:{title: string, answer: any}) => {
   const [accordionOpen, setAccordionOpen] = useState(false);
 
   return (
@@ -77,7 +77,15 @@ const Accordion = ({ title, answer}:{title: string, answer: string}) => {
             : "grid-rows-[0fr] opacity-0"
         }`}
       >
-        <div className="overflow-hidden">{answer}</div>
+        <div className="overflow-hidden">{
+            <ul>
+            {answer.map((result: any, resultIndex: any) => (
+              <li key={resultIndex}>
+                User: {result.userName}, Score: {result.score}
+              </li>
+            ))}
+          </ul>
+        }</div>
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ async function getQuiz(topic:String) {
         role: 'user', content: `The topic for our quiz is ${topic}. You should infer this topic to be something regarding K-12 education or college education.`
       },
       {
-        role: 'system', content:  `The quiz should have at least 10 questions, and each question should have the question prompt, a list of answer choices, and an index indicating the correct answer. 
+        role: 'system', content:  `The quiz should have at least 5 questions, and each question should have the question prompt, a list of answer choices, and an index indicating the correct answer. 
         You can include multiple-choice questions. Please provide a well-structured JSON response that can be read by JSON.Parse. return a json as 
         type Quiz = {
           questions: Array<{
@@ -39,86 +39,86 @@ async function getQuiz(topic:String) {
 }
 
 
-// export async function DELETE(
-//   req: Request,
-//   { params }: { params: { courseId: string; chapterId: string } }
-// ) {
-//   try {
-//     const { userId } = auth();
+export async function DELETE(
+  req: Request,
+  { params }: { params: { courseId: string; chapterId: string } }
+) {
+  try {
+    const { userId } = auth();
 
-//     if (!userId) {
-//       return new NextResponse("Unauthorized", { status: 401 });
-//     }
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-//     const ownCourse = await db.course.findUnique({
-//       where: {
-//         id: params.courseId,
-//         userId,
-//       }
-//     });
+    const ownCourse = await db.course.findUnique({
+      where: {
+        id: params.courseId,
+        userId,
+      }
+    });
 
-//     if (!ownCourse) {
-//       return new NextResponse("Unauthorized", { status: 401 });
-//     }
+    if (!ownCourse) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-//     const chapter = await db.chapter.findUnique({
-//       where: {
-//         id: params.chapterId,
-//         courseId: params.courseId,
-//       }
-//     });
+    const chapter = await db.chapter.findUnique({
+      where: {
+        id: params.chapterId,
+        courseId: params.courseId,
+      }
+    });
 
-//     if (!chapter) {
-//       return new NextResponse("Not Found", { status: 404 });
-//     }
+    if (!chapter) {
+      return new NextResponse("Not Found", { status: 404 });
+    }
 
-//     if (chapter.videoUrl) {
-//       const existingMuxData = await db.muxData.findFirst({
-//         where: {
-//           chapterId: params.chapterId,
-//         }
-//       });
+    // if (chapter.videoUrl) {
+    //   const existingMuxData = await db.muxData.findFirst({
+    //     where: {
+    //       chapterId: params.chapterId,
+    //     }
+    //   });
 
-//       if (existingMuxData) {
-//         await Video.Assets.del(existingMuxData.assetId);
-//         await db.muxData.delete({
-//           where: {
-//             id: existingMuxData.id,
-//           }
-//         });
-//       }
-//     }
+    //   if (existingMuxData) {
+    //     await Video.Assets.del(existingMuxData.assetId);
+    //     await db.muxData.delete({
+    //       where: {
+    //         id: existingMuxData.id,
+    //       }
+    //     });
+    //   }
+    // }
 
-//     const deletedChapter = await db.chapter.delete({
-//       where: {
-//         id: params.chapterId
-//       }
-//     });
+    const deletedChapter = await db.chapter.delete({
+      where: {
+        id: params.chapterId
+      }
+    });
 
-//     const publishedChaptersInCourse = await db.chapter.findMany({
-//       where: {
-//         courseId: params.courseId,
-//         isPublished: true,
-//       }
-//     });
+    const publishedChaptersInCourse = await db.chapter.findMany({
+      where: {
+        courseId: params.courseId,
+        isPublished: true,
+      }
+    });
 
-//     if (!publishedChaptersInCourse.length) {
-//       await db.course.update({
-//         where: {
-//           id: params.courseId,
-//         },
-//         data: {
-//           isPublished: false,
-//         }
-//       });
-//     }
+    if (!publishedChaptersInCourse.length) {
+      await db.course.update({
+        where: {
+          id: params.courseId,
+        },
+        data: {
+          isPublished: false,
+        }
+      });
+    }
 
-//     return NextResponse.json(deletedChapter);
-//   } catch (error) {
-//     console.log("[CHAPTER_ID_DELETE]", error);
-//     return new NextResponse("Internal Error", { status: 500 });
-//   }
-// }
+    return NextResponse.json(deletedChapter);
+  } catch (error) {
+    console.log("[CHAPTER_ID_DELETE]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
 
 export async function PATCH(
   req: Request,

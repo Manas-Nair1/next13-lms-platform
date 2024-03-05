@@ -99,7 +99,7 @@ const AnalyticsPage = async () => {
   if (globalVar == undefined){
     return(
       <div className="p-6">
-        <p>No grades found! Tell your students to take the quizzes!</p>
+        <p>No grades found</p>
       </div>
     )
   } else {
@@ -117,7 +117,7 @@ const AnalyticsPage = async () => {
               {course.chapterInfo.map((chapter, chapterIndex) => (
                 <li key={chapterIndex}>
                   <Accordion title={chapter.chapterTitle} answer={chapter.quizResults}></Accordion>
-                  {/* <ul>
+                  {/* <ul>\
                     {chapter.quizResults.map((result, resultIndex) => (
                       <li key={resultIndex}>
                         User: {result.userId}, Score: {result.score}

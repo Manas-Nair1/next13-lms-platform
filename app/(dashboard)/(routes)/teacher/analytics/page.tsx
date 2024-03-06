@@ -111,7 +111,7 @@ const AnalyticsPage = async () => {
       
       <div className="w-full p-5">
         {globalVar.map((course, courseIndex) => (
-          <div key={courseIndex} className=" bg-blue-200 m-4 p-4 rounded-full">
+          <div key={courseIndex} className=" bg-blue-200 m-4 p-4">
             <h2>{course.coursetitle}</h2>
             <ul>
               {course.chapterInfo.map((chapter, chapterIndex) => (

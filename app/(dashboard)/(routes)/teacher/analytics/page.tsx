@@ -111,7 +111,7 @@ const AnalyticsPage = async () => {
       <div className="w-full p-5">
         {globalVar.map((course, courseIndex) => (
           <div key={courseIndex} className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full m-4">
-            <h2>{course.coursetitle}</h2>
+            <h2 className="text-lg pb-2 font-bold">{course.coursetitle}</h2>
             <ul>
               {course.chapterInfo.map((chapter, chapterIndex) => (
                 <li key={chapterIndex}>

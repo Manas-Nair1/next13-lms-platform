@@ -12,6 +12,7 @@ import { ChapterDescriptionForm } from "./_components/chapter-description-form";
 import { ChapterAccessForm } from "./_components/chapter-access-form";
 import { ChapterVideoForm } from "./_components/chapter-video-form";
 import { ChapterActions } from "./_components/chapter-actions";
+import { QuizPreview } from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/quizPreview";
 
 const ChapterIdPage = async ({
   params
@@ -46,6 +47,11 @@ const ChapterIdPage = async ({
   const completionText = `(${completedFields}/${totalFields})`;
 
   const isComplete = requiredFields.every(Boolean);
+  const quizData = await db.quizData.findFirst({
+    where: {
+      chapterId: params.chapterId
+    }
+  })
   // const isComplete = true
 
   return (
@@ -130,6 +136,9 @@ const ChapterIdPage = async ({
               chapterId={params.chapterId}
               courseId={params.courseId}
             />
+            <div className="mt-6 border bg-slate-100 rounded-md p-4">
+              <QuizPreview quizdata={quizData?.questions}/>
+            </div>
           </div>
         </div>
       </div>

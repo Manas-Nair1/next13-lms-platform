@@ -80,10 +80,11 @@ const Accordion = ({ title, answer}:{title: string, answer: any}) => {
         <div className="overflow-hidden">{
             <ul>
             {answer.map((result: any, resultIndex: any) => (
-              <li key={resultIndex}>
+              <li key={resultIndex} className="">
                 User: {result.userName}, Score: {result.score}
               </li>
             ))}
+            {answer.length < 1 ? <p>No Results Found</p> : null}
           </ul>
         }</div>
       </div>

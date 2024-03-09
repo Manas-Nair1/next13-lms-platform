@@ -106,24 +106,16 @@ const AnalyticsPage = async () => {
 
    return ( 
     <div className="p-6">
-      {/* <Accordion title="Collapsible content" answer="this should be collapsed"></Accordion> */}
-      {/* {globalVar ? <p>{globalVar[1].coursetitle}</p>: <p>else this will be</p>} */}
-      
+
+        {/* <div className="relative w-full aspect-video rounded-md overflow-hidden"></div> */}
       <div className="w-full p-5">
         {globalVar.map((course, courseIndex) => (
-          <div key={courseIndex} className=" bg-blue-200 m-4 p-4">
+          <div key={courseIndex} className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full m-4">
             <h2>{course.coursetitle}</h2>
             <ul>
               {course.chapterInfo.map((chapter, chapterIndex) => (
                 <li key={chapterIndex}>
                   <Accordion title={chapter.chapterTitle} answer={chapter.quizResults}></Accordion>
-                  {/* <ul>\
-                    {chapter.quizResults.map((result, resultIndex) => (
-                      <li key={resultIndex}>
-                        User: {result.userId}, Score: {result.score}
-                      </li>
-                    ))}
-                  </ul> */}
                 </li>
               ))}
             </ul>
@@ -133,7 +125,6 @@ const AnalyticsPage = async () => {
     </div>
    );
   }
-  
   
 }
  

@@ -69,8 +69,8 @@ const CourseIdPage = async ({
 
   const completionText = `(${completedFields}/${totalFields})`;
 
-  // const isComplete = requiredFields.every(Boolean);
-  const isComplete = true;
+  const isComplete = requiredFields.every(Boolean);
+  // const isComplete = true;
 
   return (
     <>

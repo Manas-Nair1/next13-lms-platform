@@ -17,6 +17,7 @@ interface ChapterVideoFormProps {
   initialData: Chapter;
   courseId: string;
   chapterId: string;
+  quizdata?: any;
 };
 
 const formSchema = z.object({
@@ -45,7 +46,6 @@ export const ChapterVideoForm = ({
       toast.error("Something went wrong");
     }
   }
-
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
@@ -57,27 +57,20 @@ export const ChapterVideoForm = ({
           {!isEditing && !initialData.videoUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add a video
+              Add a Assignment
             </>
           )}
           {!isEditing && initialData.videoUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit video
+              Edit Assignment
             </>
           )}
         </Button>
       </div>
       {!isEditing && (
-        !initialData.videoUrl ? (
-          <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
-            <Video className="h-10 w-10 text-slate-500" />
-          </div>
-        ) : (
-          <div className="relative aspect-video mt-2">
-            Muxplayer would go here
-          </div>
-        )
+        <h1>Preview quiz</h1>
+
       )}
       {isEditing && (
         <div>

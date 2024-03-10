@@ -91,7 +91,8 @@ export async function POST(
     //   }
     // });
 
-    return NextResponse.json({ url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}` });
+    // return NextResponse.json({ url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}` });
+    return NextResponse.json({ url: "/" });
   } catch (error) {
     console.log("[COURSE_ID_CHECKOUT]", error);
     return new NextResponse("Internal Error", { status: 500 })

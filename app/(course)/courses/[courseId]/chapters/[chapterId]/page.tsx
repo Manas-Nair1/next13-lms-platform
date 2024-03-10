@@ -74,21 +74,22 @@ const ChapterIdPage = async ({
       {isLocked && (
         <Banner
           variant="warning"
-          label="You need to purchase this course to watch this chapter."
+          label="You need to enroll for your teacher to see scores."
         />
       )}
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4">
-          <p></p>
+          {isLocked && 
           <VideoPlayer
-            existingQuizData={quizData?.questions}
-            chapterId={params.chapterId}
-            title={chapter.title}
-            courseId={params.courseId}
-            nextChapterId={nextChapter?.id}
-            isLocked={isLocked}
-            completeOnEnd={completeOnEnd}
-          />
+          existingQuizData={quizData?.questions}
+          chapterId={params.chapterId}
+          title={chapter.title}
+          courseId={params.courseId}
+          nextChapterId={nextChapter?.id}
+          isLocked={isLocked}
+          completeOnEnd={completeOnEnd}
+        />
+          }
         </div>
         <div>
           <div className="p-4 flex flex-col md:flex-row items-center justify-between">

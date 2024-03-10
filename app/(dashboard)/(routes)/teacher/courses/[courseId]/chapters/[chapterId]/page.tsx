@@ -136,9 +136,11 @@ const ChapterIdPage = async ({
               chapterId={params.chapterId}
               courseId={params.courseId}
             />
-            <div className="mt-6 border bg-slate-100 rounded-md p-4">
-              {quizData && <QuizPreview quizdata={quizData?.questions}/>}
-            </div>
+              {quizData &&
+              <div className="mt-6 border bg-slate-100 rounded-md p-4">
+                <QuizPreview quizdata={quizData?.questions}/>
+              </div>
+              }
           </div>
         </div>
       </div>

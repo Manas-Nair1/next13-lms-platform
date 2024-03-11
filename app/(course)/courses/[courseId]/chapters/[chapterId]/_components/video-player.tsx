@@ -98,7 +98,7 @@ export const VideoPlayer = ({
                 borderRadius: '8px', // Add rounded corners
               }}
             >
-              {answer}
+              - {answer}
             </button>
             </ul>
           ))}

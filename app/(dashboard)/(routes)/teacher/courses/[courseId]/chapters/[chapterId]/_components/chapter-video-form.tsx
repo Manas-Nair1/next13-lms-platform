@@ -68,10 +68,10 @@ export const ChapterVideoForm = ({
           )}
         </Button>
       </div>
-      {!isEditing && (
+      {/* {!isEditing && (
         <h1>Preview quiz</h1>
 
-      )}
+      )} */}
       {isEditing && (
         <div>
         {/* Replace FileUpload with a text input */}

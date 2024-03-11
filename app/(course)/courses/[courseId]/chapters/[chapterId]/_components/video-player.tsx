@@ -105,7 +105,7 @@ export const VideoPlayer = ({
         </div>
       ))}
       <div className="mx-auto">
-        <h2 className="p-2 font-bold">Your Final Score: {calculateFinalScore()}%</h2>
+        {/* <h2 className="p-2 font-bold">Current Score: {calculateFinalScore()}%</h2> */}
         <Button
             onClick={()=> onEnd()}
               >

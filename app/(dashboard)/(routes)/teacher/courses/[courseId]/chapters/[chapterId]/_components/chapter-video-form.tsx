@@ -82,14 +82,6 @@ export const ChapterVideoForm = ({
           className="border p-2 my-2 w-full"
           placeholder="Enter quiz topic"
         />
-        {/* <button
-          onClick={() => {
-            // Use the topicInput value when submitting
-            onSubmit({ quiztopic: topicInput });
-          }}
-        >
-          Submit
-        </button> */}
         <Button
           onClick={() => {
             // Use the topicInput value when submitting

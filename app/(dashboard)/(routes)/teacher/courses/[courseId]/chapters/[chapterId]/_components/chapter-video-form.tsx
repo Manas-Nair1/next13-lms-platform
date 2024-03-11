@@ -79,7 +79,7 @@ export const ChapterVideoForm = ({
           type="text"
           value={topicInput}
           onChange={(e) => setTopicInput(e.target.value)}
-          className="border p-2 mt-2"
+          className="border p-2 my-2 w-full"
           placeholder="Enter quiz topic"
         />
         {/* <button

@@ -59,7 +59,7 @@ export const VideoPlayer = ({
       toast.error("Something went wrong");
     }
   }
-  console.log(existingQuizData.questions)
+  // console.log(existingQuizData.questions)
   const [selectedAnswers, setSelectedAnswers] = useState(Array(existingQuizData.questions.length).fill(null));
 
   const handleButtonClick = (questionIndex: number, answerIndex: number, correctAnswerIndex: number) => {
@@ -78,7 +78,9 @@ export const VideoPlayer = ({
   };
 
   return (
-    <div className="relative aspect-video">
+   <div className="">
+     {existingQuizData && (
+      <div className="relative aspect-video">
       {existingQuizData.questions.map((thisquestion: any, questionIndex: number) => (
         <div key={questionIndex} className="">
           <h1>{thisquestion.question}</h1>
@@ -114,21 +116,7 @@ export const VideoPlayer = ({
         {/* <button onClick={()=> onEnd()}>Submit</button> */}
       </div>
     </div>
+    )}
+   </div>
   );
-  // return (
-  //   <div className="relative aspect-video">
-  //     {existingQuizData.questions.map((thisquestion:any) => (
-  //       <div className="">
-  //         <h1>{thisquestion.question}</h1>
-  //         {thisquestion.answers.map((answer: any) => (
-  //           <ul>
-  //             <button key= {answer}>
-  //               {answer}
-  //             </button>
-  //           </ul>
-  //         ))}
-  //       </div>
-  //     ))}
-  //   </div>
-  // )
 }

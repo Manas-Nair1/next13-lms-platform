@@ -10,6 +10,7 @@ import { Loader2, Lock } from "lucide-react";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 import { db } from "@/lib/db";
 import { number } from "zod";
+import { Button } from "@/components/ui/button";
 
 interface QuizQuestionProps {
   existingQuizData: any;
@@ -103,9 +104,14 @@ export const VideoPlayer = ({
           ))}
         </div>
       ))}
-      <div>
-        <h2>Your Final Score: {calculateFinalScore()}%</h2>
-        <button onClick={()=> onEnd()}>Submit</button>
+      <div className="mx-auto">
+        <h2 className="p-2 font-bold">Your Final Score: {calculateFinalScore()}%</h2>
+        <Button
+            onClick={()=> onEnd()}
+              >
+                Submit
+        </Button>
+        {/* <button onClick={()=> onEnd()}>Submit</button> */}
       </div>
     </div>
   );

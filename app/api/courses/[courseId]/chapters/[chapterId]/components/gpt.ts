@@ -12,7 +12,7 @@ export async function getQuiz(topic:String) {
           role: 'user', content: `The topic for our quiz is ${topic}. You should infer this topic to be something regarding K-12 education or college education.`
         },
         {
-          role: 'system', content:  `The quiz should have at least 5 questions, and each question should have the question prompt, a list of answer choices, and an index indicating the correct answer. 
+          role: 'system', content:  `The quiz should have at least 10 questions, and each question should have the question prompt, a list of answer choices, and an index indicating the correct answer. 
           You can include multiple-choice questions. provide a well-structured JSON response that can be read by JSON.Parse. return a json as 
           type Quiz = {
             questions: Array<{

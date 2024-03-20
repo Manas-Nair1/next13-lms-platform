@@ -34,7 +34,7 @@ export const ChapterVideoForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true); // Set isLoading to true when submitting
-      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
+      axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
       toast.success("Chapter updated");
       toggleEdit();
       router.refresh();

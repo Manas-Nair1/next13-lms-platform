@@ -154,7 +154,7 @@ export async function PATCH(
 
       const asset = await getQuiz(values.quiztopic)
       console.log(asset)
-      const json = JSON.parse(asset)
+      const json = JSON.parse(asset.replace(/`/g, ''))
       console.log(json)
       await db.quizData.create({
         data: {

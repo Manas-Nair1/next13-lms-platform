@@ -141,6 +141,12 @@ const ChapterIdPage = async ({
                 <QuizPreview quizdata={quizData?.questions}/>
               </div>
               }
+              {!quizData &&
+              <div className="mt-6 border bg-slate-100 rounded-md p-4">
+                <h1>Preview Questions</h1>
+                <p>Quiz questions may take a few minutes to update</p>
+              </div>
+              }
           </div>
         </div>
       </div>

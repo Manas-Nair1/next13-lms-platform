@@ -2,6 +2,9 @@ import OpenAI from "openai";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
+
+export const runtime = 'edge'
+
 import { db } from "@/lib/db";
 
 type Quiz = {
@@ -153,9 +156,9 @@ export async function PATCH(
       }
 
       const asset = await getQuiz(values.quiztopic)
-      console.log(asset)
+      // console.log(asset)
       const json = JSON.parse(asset.replace(/`/g, ''))
-      console.log(json)
+      // console.log(json)
       await db.quizData.create({
         data: {
           chapterId: params.chapterId,

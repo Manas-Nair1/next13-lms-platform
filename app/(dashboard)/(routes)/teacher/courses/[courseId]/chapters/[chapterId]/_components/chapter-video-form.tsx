@@ -34,10 +34,12 @@ export const ChapterVideoForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true); // Set isLoading to true when submitting
-      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-      toast.success("Chapter updated");
-      toggleEdit();
-      router.refresh();
+      axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
+      setTimeout(() => {
+        toast.success("Chapter updated");
+        toggleEdit();
+        router.refresh();
+      }, 10000);
     } catch {
       toast.error("Something went wrong");
     } finally {

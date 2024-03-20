@@ -64,7 +64,6 @@ export const VideoPlayer = ({
 
   const handleButtonClick = (questionIndex: number, answerIndex: number, correctAnswerIndex: number) => {
     const isCorrect = answerIndex === correctAnswerIndex;
-
     // Update the selected answer for the current question
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[questionIndex] = { answerIndex, isCorrect };

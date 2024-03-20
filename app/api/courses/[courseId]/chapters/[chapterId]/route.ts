@@ -1,4 +1,3 @@
-import Mux from "@mux/mux-node";
 import OpenAI from "openai";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
@@ -72,22 +71,6 @@ export async function DELETE(
       return new NextResponse("Not Found", { status: 404 });
     }
 
-    // if (chapter.videoUrl) {
-    //   const existingMuxData = await db.muxData.findFirst({
-    //     where: {
-    //       chapterId: params.chapterId,
-    //     }
-    //   });
-
-    //   if (existingMuxData) {
-    //     await Video.Assets.del(existingMuxData.assetId);
-    //     await db.muxData.delete({
-    //       where: {
-    //         id: existingMuxData.id,
-    //       }
-    //     });
-    //   }
-    // }
 
     const deletedChapter = await db.chapter.delete({
       where: {
@@ -173,16 +156,6 @@ export async function PATCH(
       console.log(asset)
       const json = JSON.parse(asset)
       console.log(json)
-      // try {
-      //   const quizObject = JSON.parse(asset);
-      //   console.log("Parsed Quiz Object:", quizObject);
-      
-      //   // Now you can work with the 'quizObject' in your routes.ts file
-      // } catch (error) {
-      //   console.error("Error parsing GPT-3.5 Turbo response:", error);
-      // }
-      // console.log("heres string")
-      // console.log(String(asset))
       await db.quizData.create({
         data: {
           chapterId: params.chapterId,

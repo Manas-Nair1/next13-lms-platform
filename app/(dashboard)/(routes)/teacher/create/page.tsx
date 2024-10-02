@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import CoursesPage from "../courses/page";
+import CoursesPageTemplate from "./templates_preview";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -101,6 +103,10 @@ const CreatePage = () => {
             </div>
           </form>
         </Form>
+        <h1 className="text-2xl">
+          Templates
+        </h1>
+        <CoursesPageTemplate></CoursesPageTemplate>
       </div>
     </div>
    );

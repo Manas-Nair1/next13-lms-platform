@@ -2,28 +2,29 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { Pencil, PlusCircle, ImageIcon, File, Loader2, X } from "lucide-react";
+import { Pencil, PlusCircle, File, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Attachment, Course } from "@prisma/client";
-import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 
+// Update the schema to include both URL and filename
+const formSchema = z.object({
+  url: z.string().min(1),
+  filename: z.string().min(1), // Adding filename field
+});
+
 interface AttachmentFormProps {
   initialData: Course & { attachments: Attachment[] };
   courseId: string;
-};
-
-const formSchema = z.object({
-  url: z.string().min(1),
-});
+}
 
 export const AttachmentForm = ({
   initialData,
-  courseId
+  courseId,
 }: AttachmentFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -34,6 +35,7 @@ export const AttachmentForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      console.log(values);
       await axios.post(`/api/courses/${courseId}/attachments`, values);
       toast.success("Course updated");
       toggleEdit();
@@ -54,30 +56,20 @@ export const AttachmentForm = ({
     } finally {
       setDeletingId(null);
     }
-  }
+  };
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
         Course attachments
         <Button onClick={toggleEdit} variant="ghost">
-          {isEditing && (
-            <>Cancel</>
-          )}
-          {!isEditing && (
-            <>
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Add a file
-            </>
-          )}
+          {isEditing ? <>Cancel</> : <> <PlusCircle className="h-4 w-4 mr-2" /> Add a file</>}
         </Button>
       </div>
       {!isEditing && (
         <>
           {initialData.attachments.length === 0 && (
-            <p className="text-sm mt-2 text-slate-500 italic">
-              No attachments yet
-            </p>
+            <p className="text-sm mt-2 text-slate-500 italic">No attachments yet</p>
           )}
           {initialData.attachments.length > 0 && (
             <div className="space-y-2">
@@ -87,14 +79,8 @@ export const AttachmentForm = ({
                   className="flex items-center p-3 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md"
                 >
                   <File className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <p className="text-xs line-clamp-1">
-                    {attachment.name}
-                  </p>
-                  {deletingId === attachment.id && (
-                    <div>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    </div>
-                  )}
+                  <p className="text-xs line-clamp-1">{attachment.name}</p>
+                  {deletingId === attachment.id && <Loader2 className="h-4 w-4 animate-spin" />}
                   {deletingId !== attachment.id && (
                     <button
                       onClick={() => onDelete(attachment.id)}
@@ -113,9 +99,12 @@ export const AttachmentForm = ({
         <div>
           <FileUpload
             endpoint="courseAttachment"
-            onChange={(url) => {
-              if (url) {
-                onSubmit({ url: url });
+            onChange={(url, filename) => { // Accept both url and filename
+              if (url && filename) {
+                onSubmit({ 
+                  url: url,
+                  filename: filename, // Add filename to submit
+                });
               }
             }}
           />
@@ -125,5 +114,5 @@ export const AttachmentForm = ({
         </div>
       )}
     </div>
-  )
+  );
 }

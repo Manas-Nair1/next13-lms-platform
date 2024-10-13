@@ -130,9 +130,10 @@ export async function PATCH(
         });
       }
 
-      const asset = await getQuiz(values.quiztopic)
-      // console.log(asset)
-      const json = JSON.parse(asset.replace(/`/g, ''))
+      // const asset = await getQuiz(values.quiztopic)
+      // // console.log(asset)
+      // const json = JSON.parse(asset.replace(/`/g, ''))
+      const json = await getQuiz(values.quiztopic);
       // console.log(json)
       await db.quizData.create({
         data: {

@@ -1,24 +1,23 @@
-datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
-}
-
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Course {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId String
-  title String @db.Text
-  description String? @db.Text
-  imageUrl String? @db.Text
+  title String
+  description String?
+  imageUrl String?
   price Float?
   isPublished Boolean @default(false)
 
-  categoryId String?
+  categoryId String? @db.Uuid  // UUID type
   category Category? @relation(fields: [categoryId], references: [id])
 
   chapters Chapter[]
@@ -29,22 +28,22 @@ model Course {
   updatedAt DateTime @updatedAt
 
   @@index([categoryId])
-  @@fulltext([title])
+  @@index([title])
 }
 
 model Category {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid  // UUID type
   name String @unique
   courses Course[]
 }
 
 model Attachment {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name String
-  url String @db.Text
+  url String
 
-  courseId String
-  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String? @db.Uuid  // Ensuring UUID type consistency
+  course Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -53,18 +52,18 @@ model Attachment {
 }
 
 model Chapter {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title String
-  description String? @db.Text
-  videoUrl String? @db.Text
+  description String?
+  videoUrl String?
   position Int
   isPublished Boolean @default(false)
   isFree Boolean @default(false)
 
   muxData QuizData?
   quiztopic String
-  courseId String
-  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String? @db.Uuid  // Ensuring UUID type consistency
+  course Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   userProgress UserProgress[]
 
@@ -75,17 +74,17 @@ model Chapter {
 }
 
 model QuizData {
-  id String @id @default(uuid())
-  questions Json 
-  chapterId String @unique
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  questions Json @db.JsonB
+  chapterId String @db.Uuid @unique
   chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 }
 
 model UserProgress {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId String
 
-  chapterId String
+  chapterId String @db.Uuid
   chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   isCompleted Boolean @default(false)
@@ -99,23 +98,22 @@ model UserProgress {
 }
 
 model Purchase {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId String
 
-  courseId String
+  courseId String @db.Uuid
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, courseId])
   @@index([courseId])
 }
 
 model StripeCustomer {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId String @unique
-  // stripeCustomerId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -17,12 +17,21 @@ export const ourFileRouter = {
   courseImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
-  courseAttachment: f(["text", "image", "video", "audio", "pdf"])
+  
+  // Allow multiple file types with specific maxFileSize
+  courseAttachment: f({
+    pdf: { maxFileSize: "64MB", maxFileCount: 1 },
+    image: { maxFileSize: "4MB", maxFileCount: 1 },
+    audio: { maxFileSize: "4MB", maxFileCount: 1 },
+    video: { maxFileSize: "4MB", maxFileCount: 1 },
+    text: { maxFileSize: "4MB", maxFileCount: 1 }
+  })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
+  
   chapterVideo: f({ video: { maxFileCount: 1, maxFileSize: "512GB" } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {})
 } satisfies FileRouter;
- 
+
 export type OurFileRouter = typeof ourFileRouter;

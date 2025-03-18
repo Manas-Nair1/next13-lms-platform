@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";

@@ -14,6 +14,13 @@ import { CourseProgressButton } from "./_components/course-progress-button";
 import { db } from "@/lib/db";
 import { YTPlayer } from "./_components/ytPlayer";
 
+// Add these interfaces at the top of the file with other interfaces
+interface VideoData {
+  id: string;
+  chapterId: string;
+  videoUrl: string;
+}
+
 interface QuizQuestion {
   question: string;
   answers: string[];
@@ -23,9 +30,10 @@ interface QuizQuestion {
 interface QuizData {
   id: string;
   chapterId: string;
-  questions: QuizQuestion[];
+  questions: {
+    questions: QuizQuestion[];
+  };
 }
-
 const ChapterIdPage = async ({
   params
 }: {
@@ -36,21 +44,7 @@ const ChapterIdPage = async ({
   if (!userId) {
     return redirect("/");
   } 
-  interface QuizQuestionProps {
-    existingQuizData: {
-      questions: {
-        question: string;
-        answers: string[];
-        correctAnswerIndex: number;
-      }
-    };
-    courseId: string;
-    chapterId: string;
-    nextChapterId?: string;
-    isLocked: boolean;
-    completeOnEnd: boolean;
-    title: string;
-  };
+
   const {
     chapter,
     course,
@@ -67,17 +61,29 @@ const ChapterIdPage = async ({
   if (!chapter || !course) {
     return redirect("/")
   }
-  const quizData = await db.quizData.findFirst({
-    where: {
-      chapterId: params.chapterId
-    }
-  }) as QuizData | null;
-  const videoData = await db.videoData.findFirst({
-    where: {
-      chapterId: params.chapterId
-    }
-  })
-  console.log(quizData?.questions)
+ // Update the queries
+ const quizData = await db.quizData.findFirst({
+  where: {
+    chapterId: params.chapterId
+  },
+  select: {
+    id: true,
+    chapterId: true,
+    questions: true
+  }
+}) as QuizData | null;
+console.log(quizData)
+const videoData = await db.videoData.findFirst({
+  where: {
+    chapterId: params.chapterId
+  },
+  select: {
+    id: true,
+    chapterId: true,
+    videoUrl: true
+  }
+}) as VideoData | null;
+
 
   const isLocked = !chapter.isFree && !purchase;
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;

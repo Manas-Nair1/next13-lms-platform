@@ -13,6 +13,7 @@ import { ChapterAccessForm } from "./_components/chapter-access-form";
 import { ChapterVideoForm } from "./_components/chapter-video-form";
 import { ChapterActions } from "./_components/chapter-actions";
 import { QuizPreview } from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/quizPreview";
+import { ChapterVideoUrlForm } from "./_components/chapter-yt-form";
 
 const ChapterIdPage = async ({
   params
@@ -28,9 +29,15 @@ const ChapterIdPage = async ({
   const chapter = await db.chapter.findUnique({
     where: {
       id: params.chapterId,
-      courseId: params.courseId
+      courseId: params.courseId,
     },
+    include: {
+      videoData: true // Include the VideoData relation
+    }
   });
+  
+  // Then modify how you pass the data to the form
+
 
   if (!chapter) {
     return redirect("/")
@@ -147,6 +154,13 @@ const ChapterIdPage = async ({
                 <p>Quiz questions may take a few minutes to update</p>
               </div>
               }
+            <ChapterVideoUrlForm
+              initialData={{
+                videoUrl: chapter?.videoData?.videoUrl || null,
+              }}
+              courseId={params.courseId}
+              chapterId={params.chapterId}
+            />
           </div>
         </div>
       </div>

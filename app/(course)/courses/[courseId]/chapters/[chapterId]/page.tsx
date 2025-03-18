@@ -11,6 +11,7 @@ import { VideoPlayer } from "./_components/video-player";
 import { CourseEnrollButton } from "./_components/course-enroll-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { db } from "@/lib/db";
+import { YTPlayer } from "./_components/ytPlayer";
 
 const ChapterIdPage = async ({
   params
@@ -58,6 +59,11 @@ const ChapterIdPage = async ({
       chapterId: params.chapterId
     }
   })
+  const videoData = await db.videoData.findFirst({
+    where: {
+      chapterId: params.chapterId
+    }
+  })
   console.log(quizData?.questions)
 
   const isLocked = !chapter.isFree && !purchase;
@@ -79,6 +85,14 @@ const ChapterIdPage = async ({
       )}
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4">
+          {videoData?.videoUrl && (
+            <YTPlayer
+              videoUrl={videoData.videoUrl}
+              title={chapter.title}
+              autoplay={completeOnEnd}
+            />
+            )}
+            <Separator />
           {quizData && (
             <VideoPlayer
             existingQuizData={quizData?.questions}

@@ -1,3 +1,4 @@
+
 "use client"
 import * as z from "zod";
 import axios from "axios";
@@ -14,8 +15,19 @@ interface ChapterVideoFormProps {
   chapterId: string;
 };
 
+interface QuizQuestion {
+  question: string;
+  answers: string[];
+  correctAnswerIndex: number;
+}
+
 const formSchema = z.object({
   quiztopic: z.string().min(1),
+  questions: z.array(z.object({
+    question: z.string().min(1),
+    answers: z.array(z.string()),
+    correctAnswerIndex: z.number()
+  })).optional()
 });
 
 export const ChapterVideoForm = ({
@@ -25,15 +37,27 @@ export const ChapterVideoForm = ({
 }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [topicInput, setTopicInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // State variable for loader
-
-  const toggleEdit = () => setIsEditing((current) => !current);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showManualInput, setShowManualInput] = useState(false);
+  const [manualQuestion, setManualQuestion] = useState<QuizQuestion>({
+    question: "",
+    answers: ["", "", "", ""],
+    correctAnswerIndex: 0
+  });
 
   const router = useRouter();
+  const toggleEdit = () => setIsEditing((current) => !current);
+
+  const handleAnswerChange = (index: number, value: string) => {
+    setManualQuestion(prev => ({
+      ...prev,
+      answers: prev.answers.map((ans, i) => i === index ? value : ans)
+    }));
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setIsLoading(true); // Set isLoading to true when submitting
+      setIsLoading(true);
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
       toast.success("Chapter updated");
       toggleEdit();
@@ -41,7 +65,29 @@ export const ChapterVideoForm = ({
     } catch {
       toast.error("Something went wrong");
     } finally {
-      setIsLoading(false); // Set isLoading back to false after submission (success or error)
+      setIsLoading(false);
+    }
+  };
+
+  const addManualQuestion = async () => {
+    try {
+      setIsLoading(true);
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
+        quiztopic: topicInput,
+        questions: [manualQuestion]
+      });
+      toast.success("Question added successfully");
+      setShowManualInput(false);
+      setManualQuestion({
+        question: "",
+        answers: ["", "", "", ""],
+        correctAnswerIndex: 0
+      });
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to add question");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,16 +124,72 @@ export const ChapterVideoForm = ({
             className="border p-2 my-2 w-full"
             placeholder="Enter quiz topic"
           />
-          <Button
-            onClick={() => {
-              onSubmit({ quiztopic: topicInput });
-            }}
-            disabled={isLoading} // Disable the button while loading
-          >
-            {isLoading ? "Saving..." : "Save"} {/* Show "Saving..." text when loading */}
-          </Button>
+          
+          <div className="flex gap-x-2 mb-4">
+            <Button
+              onClick={() => onSubmit({ quiztopic: topicInput })}
+              disabled={isLoading}
+            >
+              {isLoading ? "Saving..." : "Save Topic"}
+            </Button>
+            <Button
+              onClick={() => setShowManualInput(true)}
+              variant="outline"
+              disabled={!topicInput}
+            >
+              Add Manual Question
+            </Button>
+          </div>
+
+          {showManualInput && (
+            <div className="mt-4 space-y-4 border-t pt-4">
+              <input
+                type="text"
+                value={manualQuestion.question}
+                onChange={(e) => setManualQuestion(prev => ({...prev, question: e.target.value}))}
+                className="border p-2 w-full"
+                placeholder="Enter question"
+              />
+              
+              <div className="space-y-2">
+                {manualQuestion.answers.map((answer, index) => (
+                  <div key={index} className="flex items-center gap-x-2">
+                    <input
+                      type="text"
+                      value={answer}
+                      onChange={(e) => handleAnswerChange(index, e.target.value)}
+                      className="border p-2 flex-1"
+                      placeholder={`Answer ${index + 1}`}
+                    />
+                    <input
+                      type="radio"
+                      name="correctAnswer"
+                      checked={manualQuestion.correctAnswerIndex === index}
+                      onChange={() => setManualQuestion(prev => ({...prev, correctAnswerIndex: index}))}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-x-2">
+                <Button
+                  onClick={addManualQuestion}
+                  disabled={isLoading || !manualQuestion.question || manualQuestion.answers.some(a => !a)}
+                >
+                  {isLoading ? "Adding..." : "Add Question"}
+                </Button>
+                <Button
+                  onClick={() => setShowManualInput(false)}
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+
           <div className="text-xs text-muted-foreground mt-4">
-            Provide a topic for this chapter&apos;s quiz
+            Provide a topic for this chapter&apos;s quiz and add questions manually
           </div>
         </div>
       )}

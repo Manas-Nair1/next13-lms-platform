@@ -61,6 +61,7 @@ model Chapter {
   isFree Boolean @default(false)
 
   muxData QuizData?
+  videoData VideoData?
   quiztopic String
   courseId String? @db.Uuid  // Ensuring UUID type consistency
   course Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -78,6 +79,16 @@ model QuizData {
   questions Json @db.JsonB
   chapterId String @db.Uuid @unique
   chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
+
+model VideoData {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  videoUrl String
+  chapterId String @unique @db.Uuid
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model UserProgress {

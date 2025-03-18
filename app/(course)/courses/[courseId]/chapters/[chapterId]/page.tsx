@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { File } from "lucide-react";
@@ -13,6 +13,18 @@ import { CourseEnrollButton } from "./_components/course-enroll-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { db } from "@/lib/db";
 import { YTPlayer } from "./_components/ytPlayer";
+
+interface QuizQuestion {
+  question: string;
+  answers: string[];
+  correctAnswerIndex: number;
+}
+
+interface QuizData {
+  id: string;
+  chapterId: string;
+  questions: QuizQuestion[];
+}
 
 const ChapterIdPage = async ({
   params
@@ -59,7 +71,7 @@ const ChapterIdPage = async ({
     where: {
       chapterId: params.chapterId
     }
-  })
+  }) as QuizData | null;
   const videoData = await db.videoData.findFirst({
     where: {
       chapterId: params.chapterId

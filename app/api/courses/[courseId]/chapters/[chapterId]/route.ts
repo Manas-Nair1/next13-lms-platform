@@ -171,6 +171,7 @@ export async function PATCH(
     if (!ownCourse) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
+
     const chapter = await db.chapter.update({
       where: {
         id: params.chapterId,
@@ -188,38 +189,56 @@ export async function PATCH(
         }
       });
 
-      if (existingQuizData) {
-        await db.quizData.delete({
-          where: {
-            id: existingQuizData.id,
-          }
-        });
-      }
-
       let quizData;
       
       // If manual questions are provided, format them to match GPT structure
       if (questions) {
-        quizData = {
-          questions: questions.map((q: any) => ({
-            question: q.question,
-            answers: q.answers,
-            correctAnswerIndex: q.correctAnswerIndex
-          }))
-        };
-      } 
-      // Otherwise, generate questions using GPT
-      else {
-        quizData = await getQuiz(values.quiztopic);
-      }
+        const newQuestions = questions.map((q: any) => ({
+          question: q.question,
+          answers: q.answers,
+          correctAnswerIndex: q.correctAnswerIndex
+        }));
 
-      // Create quiz data with consistent structure
-      await db.quizData.create({
-        data: {
-          chapterId: params.chapterId,
-          questions: quizData
+        if (existingQuizData) {
+          // Combine existing and new questions
+          const existingQuestions = existingQuizData.questions.questions || [];
+          quizData = {
+            questions: [...existingQuestions, ...newQuestions]
+          };
+
+          // Update existing quiz data
+          await db.quizData.update({
+            where: {
+              id: existingQuizData.id
+            },
+            data: {
+              questions: quizData
+            }
+          });
+        } else {
+          // Create new quiz data if none exists
+          quizData = {
+            questions: newQuestions
+          };
+          
+          await db.quizData.create({
+            data: {
+              chapterId: params.chapterId,
+              questions: quizData
+            }
+          });
         }
-      });
+      } else if (!existingQuizData) {
+        // Generate questions using GPT only if no existing quiz data
+        quizData = await getQuiz(values.quiztopic);
+        
+        await db.quizData.create({
+          data: {
+            chapterId: params.chapterId,
+            questions: quizData
+          }
+        });
+      }
     }
 
     return NextResponse.json(chapter);

@@ -36,8 +36,7 @@ const ChapterIdPage = async ({
       videoData: true // Include the VideoData relation
     }
   });
-  
-  // Then modify how you pass the data to the form
+
 
 
   if (!chapter) {

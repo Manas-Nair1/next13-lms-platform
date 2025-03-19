@@ -21,7 +21,7 @@ export const QuizPreview = ({ quizdata }: QuizPreviewProps) => {
 
   // Parse the JSON data if it's stored as a string
   const questions = typeof quizdata.questions === 'string' 
-    ? JSON.parse(quizdata.questions) 
+    ? JSON.parse(quizdata.questions).questions 
     : quizdata.questions;
 
   return (

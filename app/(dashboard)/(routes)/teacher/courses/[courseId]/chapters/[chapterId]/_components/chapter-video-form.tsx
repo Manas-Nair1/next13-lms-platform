@@ -1,4 +1,3 @@
-
 "use client"
 import * as z from "zod";
 import axios from "axios";
@@ -91,6 +90,22 @@ export const ChapterVideoForm = ({
     }
   };
 
+  const generateQuizWithGpt = async () => {
+    try {
+      setIsLoading(true);
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
+        quiztopic: topicInput,
+        useGpt: true
+      });
+      toast.success("Quiz generated successfully");
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to generate quiz");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
@@ -138,6 +153,13 @@ export const ChapterVideoForm = ({
               disabled={!topicInput}
             >
               Add Manual Question
+            </Button>
+            <Button
+              onClick={generateQuizWithGpt}
+              variant="outline"
+              disabled={!topicInput}
+            >
+              Generate Quiz with GPT
             </Button>
           </div>
 
@@ -189,7 +211,7 @@ export const ChapterVideoForm = ({
           )}
 
           <div className="text-xs text-muted-foreground mt-4">
-            Provide a topic for this chapter&apos;s quiz and add questions manually
+            Provide a topic for this chapter&apos;s quiz and add questions manually or generate a quiz using GPT.
           </div>
         </div>
       )}

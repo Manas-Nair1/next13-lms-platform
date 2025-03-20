@@ -95,7 +95,6 @@ const AnalyticsPage = async () => {
   let globalVar;
   // Use Promise.all to wait for all async operations to complete
   await Promise.all(organizedData).then((result) => (globalVar = result));
-  console.log(globalVar);
   if (globalVar == undefined){
     return(
       <div className="p-6">

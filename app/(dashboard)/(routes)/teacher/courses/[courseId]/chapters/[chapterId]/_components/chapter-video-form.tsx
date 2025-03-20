@@ -1,7 +1,7 @@
 "use client"
 import * as z from "zod";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ export const ChapterVideoForm = ({
   chapterId,
 }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [topicInput, setTopicInput] = useState("");
+  const [topicInput, setTopicInput] = useState(initialData.quiztopic || "");
   const [isLoading, setIsLoading] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
   const [manualQuestion, setManualQuestion] = useState<QuizQuestion>({

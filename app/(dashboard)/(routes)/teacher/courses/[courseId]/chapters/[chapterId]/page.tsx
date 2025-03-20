@@ -129,8 +129,16 @@ const ChapterIdPage = async ({
                 courseId={params.courseId}
                 chapterId={params.chapterId}
               />
+              <ChapterVideoUrlForm
+              initialData={{
+                videoUrl: chapter?.videoData?.videoUrl || null,
+              }}
+              courseId={params.courseId}
+              chapterId={params.chapterId}
+            />
             </div>
           </div>
+          
           <div>
             <div className="flex items-center gap-x-2">
               <IconBadge icon={FileText} />
@@ -154,13 +162,7 @@ const ChapterIdPage = async ({
                 <p>Quiz questions may take a few minutes to update</p>
               </div>
               }
-            <ChapterVideoUrlForm
-              initialData={{
-                videoUrl: chapter?.videoData?.videoUrl || null,
-              }}
-              courseId={params.courseId}
-              chapterId={params.chapterId}
-            />
+            
           </div>
         </div>
       </div>

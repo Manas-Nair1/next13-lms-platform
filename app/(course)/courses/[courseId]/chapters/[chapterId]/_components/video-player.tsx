@@ -77,27 +77,24 @@ export const VideoPlayer = ({
   };
 
   return (
-   <div className="">
+   <div className="p-4">
      {existingQuizData && (
-      <div className="relative aspect-video">
+      <div className="relative aspect-video space-y-4">
       {existingQuizData.questions.map((thisquestion: any, questionIndex: number) => (
-        <div key={questionIndex} className="">
-          <h1>{thisquestion.question}</h1>
+        <div key={questionIndex} className="p-4 border rounded-lg shadow-md bg-white">
+          <h1 className="font-bold mb-2">{thisquestion.question}</h1>
           {thisquestion.answers.map((answer: string, answerIndex: number) => (
-            <ul key={answerIndex}>
+            <ul key={answerIndex} className="mb-2">
               <button
               onClick={() => handleButtonClick(questionIndex, answerIndex, thisquestion.correctAnswerIndex)}
               disabled={selectedAnswers[questionIndex] !== null} // Disable the button if the answer has been selected
-              style={{
-                backgroundColor:
-                  selectedAnswers[questionIndex]?.answerIndex === answerIndex
-                    ? selectedAnswers[questionIndex]?.isCorrect
-                      ? 'rgba(16, 185, 129, 0.5)' // Lighter green with transparency
-                      : 'rgba(239, 68, 68, 0.5)' // Lighter red with transparency
-                    : 'transparent',
-                padding: '10px', // Adjust padding as needed
-                borderRadius: '8px', // Add rounded corners
-              }}
+              className={`w-full text-left p-2 rounded-lg ${
+                selectedAnswers[questionIndex]?.answerIndex === answerIndex
+                  ? selectedAnswers[questionIndex]?.isCorrect
+                    ? 'bg-green-200'
+                    : 'bg-red-200'
+                  : 'bg-gray-100 border border-gray-200'
+              }`}
             >
               - {answer}
             </button>
@@ -106,13 +103,11 @@ export const VideoPlayer = ({
         </div>
       ))}
       <div className="mx-auto pt-2">
-        {/* <h2 className="p-2 font-bold">Current Score: {calculateFinalScore()}%</h2> */}
         <Button
             onClick={()=> onEnd()}
               >
                 Submit
         </Button>
-        {/* <button onClick={()=> onEnd()}>Submit</button> */}
       </div>
     </div>
     )}

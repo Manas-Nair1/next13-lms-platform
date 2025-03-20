@@ -19,7 +19,8 @@ const guestRoutes = [
   {
     icon: Calendar,
     label: "Calendar",
-    href: "https://calendar.google.com/",
+    // href: "https://calendar.google.com/",
+    href: "/calendar",
   },
 ];
 
@@ -37,7 +38,8 @@ const teacherRoutes = [
   {
     icon: Calendar,
     label: "Calendar",
-    href: "https://calendar.google.com/",
+    // href: "https://calendar.google.com/",
+    href: "/calendar",
   },
 ]
 

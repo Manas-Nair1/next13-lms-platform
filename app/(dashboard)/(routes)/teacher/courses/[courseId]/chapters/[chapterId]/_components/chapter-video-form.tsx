@@ -159,7 +159,7 @@ export const ChapterVideoForm = ({
               variant="outline"
               disabled={!topicInput}
             >
-              Generate Quiz with GPT
+              Generate Quiz
             </Button>
           </div>
 

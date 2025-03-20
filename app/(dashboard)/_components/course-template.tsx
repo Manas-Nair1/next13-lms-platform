@@ -52,21 +52,27 @@ const CoursesPageTemplate: React.FC<CoursesPageTemplateProps> = ({ onSelectTempl
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Select a Template (Optional)</h1>
       <ul>
-        {courses.map((course) => (
-          <li
-            key={course.id}
-            className={`mb-2 p-4 border rounded-md shadow-sm cursor-pointer ${
-              course.id === selectedTemplateId ? "border-blue-500 bg-blue-50" : ""
-            }`} // Apply styles when selected
-            onClick={() => handleTemplateSelect(course.id)}
-          >
-            <h2 className="text-lg font-semibold">{course.title}</h2>
-            <p className="text-sm text-gray-600">
-              Created on: {new Date(course.createdAt).toLocaleDateString()}
-            </p>
-            <p className="text-sm">{course.description}</p>
-          </li>
-        ))}
+        {courses
+          .filter((course) => course.title.startsWith("Template")) // Filter courses
+          .map((course) => (
+            <li
+              key={course.id}
+              className={`mb-2 p-4 border rounded-md shadow-sm cursor-pointer ${
+                course.id === selectedTemplateId ? "border-blue-500 bg-blue-50" : ""
+              }`}
+              onClick={() => handleTemplateSelect(course.id)}
+            >
+              <h2 className="text-lg font-semibold">{course.title}</h2>
+              <p className="text-sm text-gray-600">
+                Created on: {new Date(course.createdAt).toLocaleDateString()}
+              </p>
+              <p className="text-sm line-clamp-2">
+                {course.description && course.description.length > 100
+                  ? `${course.description.substring(0, 100)}...`
+                  : course.description}
+              </p>
+            </li>
+          ))}
       </ul>
     </div>
   );

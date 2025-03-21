@@ -21,9 +21,14 @@ export async function POST(req: Request) {
       const template = await db.course.findUnique({
         where: { id: templateId },
         include: {
-          chapters: true, // Include chapters
-          attachments: true, // Include attachments
-          category: true, // Include category to get its ID
+          chapters: {
+            include: {
+              muxData: true,
+              videoData: true,
+            },
+          },
+          attachments: true,
+          category: true,
         },
       });
 
@@ -37,46 +42,58 @@ export async function POST(req: Request) {
         description: template.description,
         imageUrl: template.imageUrl,
         price: template.price,
-        categoryId: template.categoryId, // Directly use the category ID from the template
+        categoryId: template.categoryId,
       };
-
-      // Clone chapters
-      const clonedChapters = template.chapters.map(chapter => ({
-        title: chapter.title,
-        description: chapter.description,
-        videoUrl: chapter.videoUrl,
-        position: chapter.position,
-        isPublished: chapter.isPublished,
-        isFree: chapter.isFree,
-        quiztopic: chapter.quiztopic,
-        courseId: newCourseData.id, // Set the new course ID (will be created after this point)
-      }));
-
-      // Clone attachments
-      const clonedAttachments = template.attachments.map(attachment => ({
-        name: attachment.name,
-        url: attachment.url,
-        courseId: newCourseData.id, // Set the new course ID
-      }));
 
       // Create the new course first to get its ID
       const course = await db.course.create({
         data: newCourseData,
       });
 
-      // Now insert chapters and attachments with the new course ID
-      await db.chapter.createMany({
-        data: clonedChapters.map(chapter => ({
-          ...chapter,
-          courseId: course.id, // Set the correct course ID
-        })),
-      });
+      // Clone chapters
+      for (const chapter of template.chapters) {
+        const newChapter = await db.chapter.create({
+          data: {
+            title: chapter.title,
+            description: chapter.description,
+            videoUrl: chapter.videoUrl,
+            position: chapter.position,
+            isPublished: chapter.isPublished,
+            isFree: chapter.isFree,
+            quiztopic: chapter.quiztopic,
+            courseId: course.id,
+          },
+        });
+
+        // Clone videoData and muxData for each chapter
+        if (chapter.videoData) {
+          await db.videoData.create({
+            data: {
+              videoUrl: chapter.videoData.videoUrl,
+              chapterId: newChapter.id,
+            },
+          });
+        }
+
+        if (chapter.muxData) {
+          await db.quizData.create({
+            data: {
+              questions: chapter.muxData.questions,
+              chapterId: newChapter.id,
+            },
+          });
+        }
+      }
+
+      // Clone attachments
+      const clonedAttachments = template.attachments.map(attachment => ({
+        name: attachment.name,
+        url: attachment.url,
+        courseId: course.id,
+      }));
 
       await db.attachment.createMany({
-        data: clonedAttachments.map(attachment => ({
-          ...attachment,
-          courseId: course.id, // Set the correct course ID
-        })),
+        data: clonedAttachments,
       });
 
       return NextResponse.json(course);
